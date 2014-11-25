@@ -1,6 +1,8 @@
 package it.lusio.android.dailyselfie;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -20,9 +22,7 @@ import java.util.Date;
 
 public class MainActivity extends Activity {
 
-    public static final String TAG = "it.lusio.android.dailyselfie";
-    private String mAlbumName;
-    private static final int TAKE_SELFIE = 1;
+    private static final int TAKE_SELFIE_REQUEST_CODE = 1;
     private static final String LAST_PHOTO_PATH = "mLastPhotoPath";
     private static final String LAST_PHOTO_DATE = "mLastPhotoDate";
     private GridViewAdapter mGridViewAdapter;
@@ -40,20 +40,18 @@ public class MainActivity extends Activity {
             finish();
         }
 
-        // Check whether we're recreating a previously destroyed instance
         if (savedInstanceState != null) {
-            // Restore value of members from saved state
             mLastPhotoPath = savedInstanceState.getString(LAST_PHOTO_PATH);
             mLastSelfieTime = savedInstanceState.getLong(LAST_PHOTO_DATE);
         }
 
-        mAlbumName = this.getResources().getString(R.string.album);
+        new AlarmService(getApplicationContext()).startAlarm();
 
         setContentView(R.layout.activity_main);
 
         GridView gridView = (GridView) findViewById(R.id.gridview);
         if (gridView != null) {
-            mGridViewAdapter = new GridViewAdapter(getApplicationContext());
+            mGridViewAdapter = new GridViewAdapter(this);
             gridView.setAdapter(mGridViewAdapter);
         }
 
@@ -73,15 +71,28 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case (R.id.action_camera):
+                Log.i(Constants.TAG, "Action Camera Clicked");
+                takeNewSelfie();
+                return true;
+            case (R.id.action_delete_all):
+                Log.i(Constants.TAG, "Delete all Clicked");
+                new AlertDialog.Builder(this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(getString(R.string.dialog_delete_all_title))
+                        .setMessage(getString(R.string.dialog_delete_all_text))
+                        .setPositiveButton(getString(R.string.positive_answer), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mGridViewAdapter.deleteAll();
+                            }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_camera) {
-            Log.i(TAG, "Action Camera Clicked");
-            takeNewSelfie();
-            return true;
+                        })
+                        .setNegativeButton(getString(R.string.negative_answer), null)
+                        .show();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -92,7 +103,7 @@ public class MainActivity extends Activity {
 
         String imageFileName = "s_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(mLastSelfieTime);
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                mAlbumName);
+                Constants.ALBUM_NAME);
         storageDir.mkdirs();
         File photoFile = new File(storageDir.getAbsolutePath() + File.separator + imageFileName + ".jpg");
 
@@ -100,14 +111,14 @@ public class MainActivity extends Activity {
         // Continue only if the File was successfully created
         if (photoFile != null) {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-            startActivityForResult(intent, TAKE_SELFIE);
+            startActivityForResult(intent, TAKE_SELFIE_REQUEST_CODE);
         }
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == TAKE_SELFIE) {
+        if (resultCode == Activity.RESULT_OK && requestCode == TAKE_SELFIE_REQUEST_CODE) {
             Selfie selfie = new Selfie(mLastSelfieTime, Uri.fromFile(new File(mLastPhotoPath)));
             mGridViewAdapter.add(selfie);
         }
@@ -121,5 +132,13 @@ public class MainActivity extends Activity {
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void showViewer(Uri uri) {
+        Intent intent = new Intent(this, ImageViewer.class);
+        Bundle b = new Bundle();
+        b.putParcelable("URI", uri);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }
