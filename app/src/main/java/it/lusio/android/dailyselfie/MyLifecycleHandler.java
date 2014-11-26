@@ -3,6 +3,7 @@ package it.lusio.android.dailyselfie;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MyLifecycleHandler implements Application.ActivityLifecycleCallbacks {
 
@@ -23,6 +24,7 @@ public class MyLifecycleHandler implements Application.ActivityLifecycleCallback
     @Override
     public void onActivityStarted(Activity activity) {
         ++started;
+        Log.d(Constants.TAG, "One Activity Started.");
     }
 
     @Override
@@ -38,6 +40,7 @@ public class MyLifecycleHandler implements Application.ActivityLifecycleCallback
     @Override
     public void onActivityStopped(Activity activity) {
         ++stopped;
+        Log.d(Constants.TAG, "One Activity Stopped.");
     }
 
     @Override

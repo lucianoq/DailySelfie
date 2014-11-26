@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -13,9 +14,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (MyLifecycleHandler.isApplicationVisible())
+        if (MyLifecycleHandler.isApplicationVisible()) {
+            Log.d(Constants.TAG, "Alarm received and ignored.");
             return;
+        }
 
+        Log.d(Constants.TAG, "Alarm received and handled.");
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
 
         Notification notification = new Notification.Builder(context)
@@ -27,7 +31,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
                 .setAutoCancel(true)
                 .build();
-
 
         NotificationManager nm = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
         nm.cancel(NOTIFICATION_ID);
