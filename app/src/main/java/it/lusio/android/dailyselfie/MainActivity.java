@@ -22,8 +22,6 @@ import java.util.Date;
 
 public class MainActivity extends Activity {
 
-
-    private static boolean mForeground = false;
     private static final int TAKE_SELFIE_REQUEST_CODE = 1;
     private static final String LAST_PHOTO_PATH = "mLastPhotoPath";
     private static final String LAST_PHOTO_DATE = "mLastPhotoDate";
@@ -31,26 +29,10 @@ public class MainActivity extends Activity {
     private String mLastPhotoPath = "";
     private long mLastSelfieTime = new Date().getTime();
 
-
-    public static boolean isInForeground() {
-        return mForeground;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mForeground = true;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mForeground = false;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {

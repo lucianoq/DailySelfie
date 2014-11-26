@@ -77,7 +77,13 @@ public class GridViewAdapter extends BaseAdapter {
 
         final Selfie item = mItems.get(i);
 
-        Picasso.with(mContext).load(item.getImageUri()).into(picture);
+        Picasso
+                .with(mContext)
+                .load(item.getImageUri())
+                .fit()
+                .centerInside()
+//                .centerCrop()
+                .into(picture);
 
         name.setText(item.getName());
 

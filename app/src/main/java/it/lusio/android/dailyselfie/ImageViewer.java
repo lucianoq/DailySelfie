@@ -1,13 +1,13 @@
 package it.lusio.android.dailyselfie;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 
 public class ImageViewer extends Activity {
@@ -21,9 +21,13 @@ public class ImageViewer extends Activity {
         setContentView(R.layout.activity_image_viewer);
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-
         Uri uri = getIntent().getExtras().getParcelable("URI");
-        Bitmap bitmap = BitmapFactory.decodeFile(uri.getPath());
-        imageView.setImageBitmap(bitmap);
+
+        Picasso
+                .with(this)
+                .load(uri)
+                .fit()
+                .centerInside()
+                .into(imageView);
     }
 }
