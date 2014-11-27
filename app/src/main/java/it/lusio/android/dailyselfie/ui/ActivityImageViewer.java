@@ -1,4 +1,4 @@
-package it.lusio.android.dailyselfie;
+package it.lusio.android.dailyselfie.ui;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -9,8 +9,10 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import it.lusio.android.dailyselfie.R;
 
-public class ImageViewer extends Activity {
+
+public class ActivityImageViewer extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

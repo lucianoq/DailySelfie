@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.lusio.android.dailyselfie.ImageViewer">
+    tools:context="it.lusio.android.dailyselfie.ui.ActivityImageViewer">
 
     <ImageView
         android:id="@+id/imageView"

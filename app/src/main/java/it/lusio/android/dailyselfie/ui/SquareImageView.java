@@ -1,4 +1,4 @@
-package it.lusio.android.dailyselfie;
+package it.lusio.android.dailyselfie.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;

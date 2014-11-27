@@ -1,13 +1,10 @@
-package it.lusio.android.dailyselfie;
+package it.lusio.android.dailyselfie.ui;
 
 import android.net.Uri;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by lusio on 24/11/14.
- */
 public class Selfie {
     private final long mId;
     private final String mName;

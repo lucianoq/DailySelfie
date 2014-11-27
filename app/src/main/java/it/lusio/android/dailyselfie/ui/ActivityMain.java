@@ -1,4 +1,4 @@
-package it.lusio.android.dailyselfie;
+package it.lusio.android.dailyselfie.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,13 +19,17 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import it.lusio.android.dailyselfie.alarm.AlarmSetter;
+import it.lusio.android.dailyselfie.Constants;
+import it.lusio.android.dailyselfie.R;
 
-public class MainActivity extends Activity {
+
+public class ActivityMain extends Activity {
 
     private static final int TAKE_SELFIE_REQUEST_CODE = 1;
     private static final String LAST_PHOTO_PATH = "mLastPhotoPath";
     private static final String LAST_PHOTO_DATE = "mLastPhotoDate";
-    private GridViewAdapter mGridViewAdapter;
+    private AdapterGridView mAdapterGridView;
     private String mLastPhotoPath = "";
     private long mLastSelfieTime = new Date().getTime();
 
@@ -45,17 +49,15 @@ public class MainActivity extends Activity {
             mLastSelfieTime = savedInstanceState.getLong(LAST_PHOTO_DATE);
         }
 
-        new AlarmService(getApplicationContext()).startAlarm();
-
         setContentView(R.layout.activity_main);
 
         GridView gridView = (GridView) findViewById(R.id.gridview);
         if (gridView != null) {
-            mGridViewAdapter = new GridViewAdapter(this);
-            gridView.setAdapter(mGridViewAdapter);
+            mAdapterGridView = new AdapterGridView(this);
+            gridView.setAdapter(mAdapterGridView);
         }
 
-        mGridViewAdapter.notifyDataSetChanged();
+        mAdapterGridView.notifyDataSetChanged();
     }
 
 
@@ -85,7 +87,7 @@ public class MainActivity extends Activity {
                         .setPositiveButton(getString(R.string.positive_answer), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mGridViewAdapter.deleteAll();
+                                mAdapterGridView.deleteAll();
                             }
 
                         })
@@ -120,7 +122,7 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == TAKE_SELFIE_REQUEST_CODE) {
             Selfie selfie = new Selfie(mLastSelfieTime, Uri.fromFile(new File(mLastPhotoPath)));
-            mGridViewAdapter.add(selfie);
+            mAdapterGridView.add(selfie);
         }
     }
 
@@ -135,7 +137,7 @@ public class MainActivity extends Activity {
     }
 
     public void showViewer(Uri uri) {
-        Intent intent = new Intent(this, ImageViewer.class);
+        Intent intent = new Intent(this, ActivityImageViewer.class);
         Bundle b = new Bundle();
         b.putParcelable("URI", uri);
         intent.putExtras(b);

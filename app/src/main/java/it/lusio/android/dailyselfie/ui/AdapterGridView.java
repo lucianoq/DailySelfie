@@ -1,4 +1,4 @@
-package it.lusio.android.dailyselfie;
+package it.lusio.android.dailyselfie.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,12 +18,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridViewAdapter extends BaseAdapter {
+import it.lusio.android.dailyselfie.Constants;
+import it.lusio.android.dailyselfie.R;
+
+public class AdapterGridView extends BaseAdapter {
     private final Context mContext;
     private List<Selfie> mItems = new ArrayList<Selfie>();
     private LayoutInflater mInflater;
 
-    public GridViewAdapter(Context context) {
+    public AdapterGridView(Context context) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
 
@@ -102,7 +105,7 @@ public class GridViewAdapter extends BaseAdapter {
                             public void onClick(DialogInterface dialog, int which) {
                                 new File(selfie.getImageUri().getPath()).delete();
                                 mItems.remove(selfie);
-                                GridViewAdapter.this.notifyDataSetChanged();
+                                AdapterGridView.this.notifyDataSetChanged();
                             }
 
                         })
@@ -118,7 +121,7 @@ public class GridViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Log.i(Constants.TAG, "Opening ImageViewer.");
-                ((MainActivity) mContext).showViewer(uri);
+                ((ActivityMain) mContext).showViewer(uri);
             }
         });
 

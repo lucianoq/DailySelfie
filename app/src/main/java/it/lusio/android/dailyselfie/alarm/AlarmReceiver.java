@@ -1,4 +1,4 @@
-package it.lusio.android.dailyselfie;
+package it.lusio.android.dailyselfie.alarm;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,19 +8,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import it.lusio.android.dailyselfie.ApplicationDailySelfie;
+import it.lusio.android.dailyselfie.Constants;
+import it.lusio.android.dailyselfie.R;
+import it.lusio.android.dailyselfie.ui.ActivityMain;
+
 
 public class AlarmReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (MyLifecycleHandler.isApplicationVisible()) {
+        if (ApplicationDailySelfie.isApplicationVisible()) {
             Log.d(Constants.TAG, "Alarm received and ignored.");
             return;
         }
 
         Log.d(Constants.TAG, "Alarm received and handled.");
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, ActivityMain.class), 0);
 
         Notification notification = new Notification.Builder(context)
                 .setSmallIcon(android.R.drawable.ic_menu_camera)
